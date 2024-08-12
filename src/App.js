@@ -10,20 +10,8 @@ function App() {
               Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
-defaultChecked
 
-
-
-asdf
-sfddfs
-
-daf
-
-
-
-
-
-        something another
+        
 
           className="App-link"
               href="https://reactjs.org"
