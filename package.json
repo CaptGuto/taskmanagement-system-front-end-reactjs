@@ -19,8 +19,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix"
+    "**/*.{js,jsx,ts,tsx}": "prettier --write"
   },
   "eslintConfig": {
     "extends": [
