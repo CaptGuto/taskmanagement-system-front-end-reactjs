@@ -92,7 +92,7 @@ export default function RegisterPage() {
               Sign Up
             </h1>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-3 w-4/5 p-[1rem] md:p-[3.75rem]">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-3 w-4/5 p-[1rem] md:p-[3.75rem] max-w-[500px]">
             <input
               {...register("firstName")}
               type="text"
