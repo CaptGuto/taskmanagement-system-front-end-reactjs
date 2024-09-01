@@ -4,9 +4,9 @@ import { Link, NavLink } from 'react-router-dom';
 function Landing() {
   return (
     <div className='bg-gradient-to-t md:bg-gradient-to-r from-[#D0E3F9]  via-[#617c8c] to-[#0E1B21] min-h-screen flex justify-center items-center'>
-      <div className='flex flex-col-reverse md:flex-row m-3 md:m-6 gap-3 md:gap-5 w-full'>
+      <div className='flex flex-col-reverse  md:flex-row m-3 md:m-6 gap-3 md:gap-5 w-full'>
         {/* Image Section */}
-        <div className='flex-1 flex justify-center items-center mt-3 md:mt-0'>
+        <div className='hidden md:flex-1 md:flex justify-center items-center mt-3 md:mt-0'>
           <img className='max-w-full max-h-full object-contain' src={LandingImg} alt="Landing" />
         </div>
         

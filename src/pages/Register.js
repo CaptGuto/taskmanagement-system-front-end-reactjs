@@ -29,7 +29,7 @@ export default function RegisterPage() {
   const navigate = useNavigate()
   const onSubmit = async (data) => {
     try {
-      const response = await axiosInstance.post('/auth/login', { data });
+      const response = await axiosInstance.post('/auth/register', { data });
 
       //I Assumed the response includes a success message
       //console.log('Login successful:', response?.success);
@@ -81,13 +81,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className='bg-gradient-to-t md:bg-gradient-to-r from-[#D0E3F9]  via-[#617c8c] to-[#0E1B21] min-h-screen flex justify-center items-center'>
+    <div className=' bg-gradient-to-bl from-[#93a6bb] to-[#0E1B21] md:bg-gradient-to-r md:from-[#D0E3F9]  md:via-[#617c8c] md:to-[#0E1B21] min-h-screen flex justify-center items-center'>
       <div className='flex flex-col-reverse md:flex-row m-3 md:m-6 gap-3 md:gap-5 w-full'>
-        <div className='flex-1 flex justify-center items-center mt-3 md:mt-0'>
+        <div className='flex-1 hidden md:flex justify-center items-center mt-3 md:mt-0'>
           <img className='max-w-full max-h-full object-contain' src={LandingImg} alt="Landing" />
         </div>
         <div className='flex flex-col flex-1 p-2 items-center w-full bg-white bg-opacity-10 rounded-[2.5rem]'>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-3 w-full p-[3.75rem]">
+        <div className='flex items-center justify-center w-4/5'>
+            <h1 className='text-4xl text-gray-200 sm:text-5xl md:text-6xl font-bold text-center font-[Roboto] m-2'>
+              Sign Up
+            </h1>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-3 w-4/5 p-[1rem] md:p-[3.75rem] max-w-[500px]">
             <input
               {...register("firstName")}
               type="text"
@@ -95,7 +100,7 @@ export default function RegisterPage() {
               className="px-4 py-1 rounded"
             />
             {errors.firstName && (
-              <p className="text-red-500">{`${errors.firstName.message}`}</p>
+              <p className="text-red-300">{`${errors.firstName.message}`}</p>
             )}
 
             <input
@@ -105,7 +110,7 @@ export default function RegisterPage() {
               className="px-4 py-1 rounded"
             />
             {errors.lastName && (
-              <p className="text-red-500">{`${errors.lastName.message}`}</p>
+              <p className="text-red-300">{`${errors.lastName.message}`}</p>
             )}
 
             <input
@@ -115,7 +120,7 @@ export default function RegisterPage() {
               className="px-4 py-1 rounded"
             />
             {errors.email && (
-              <p className="text-red-500">{`${errors.email.message}`}</p>
+              <p className="text-red-300">{`${errors.email.message}`}</p>
             )}
 
 
@@ -126,7 +131,7 @@ export default function RegisterPage() {
               className="px-4 py-1 rounded"
             />
             {errors.password && (
-              <p className="text-red-500">{`${errors.password.message}`}</p>
+              <p className="text-red-300">{`${errors.password.message}`}</p>
             )}
 
             <input
@@ -136,7 +141,7 @@ export default function RegisterPage() {
               className="px-4 py-1 rounded"
             />
             {errors.confirmPassword && (
-              <p className="text-red-500">{`${errors.confirmPassword.message}`}</p>
+              <p className="text-red-300">{`${errors.confirmPassword.message}`}</p>
             )}
 
             <button
