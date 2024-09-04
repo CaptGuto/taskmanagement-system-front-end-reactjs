@@ -94,7 +94,7 @@ export default function Login() {
                 Sign In
               </h1>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-3 p-[1rem] sm:p-[2rem] md:p-[3.75rem] w-4/5 max-w-[500px]">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-3 p-[1rem] sm:p-[2rem] md:p-[3.75rem] w-4/5 max-w-[500px]">                                 
 
               <input
                 {...register("email")}
