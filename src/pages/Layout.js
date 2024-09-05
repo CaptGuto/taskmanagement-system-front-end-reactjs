@@ -3,9 +3,9 @@ import Sidebar from '../components/Sidebar';
 
 const Layout = () => {
   return (
-    <div className="flex m-1 gap-1">
+    <div className="flex m-2 gap-1 lg:m-3">
       <Sidebar />
-      <div>
+      <div className='flex-1'>
         <Outlet />
       </div>
     </div>
