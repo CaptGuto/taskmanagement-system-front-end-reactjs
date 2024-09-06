@@ -36,7 +36,7 @@ function Sidebar() {
         <FaBars className="text-[18] sm:text-[20]" />
       </button>
       <div
-        className={`fixed top-0 left-0 w-full max-w-56 lg:min-w-60 bg-[#f4f4f4] rounded-3xl text-black min-h-screen transition-transform duration-100 transform overflow-y-auto ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:block flex flex-col justify-between z-50`}
+        className={`flex flex-col justify-between fixed top-0 left-0 w-full max-w-64 lg:min-w-60 bg-[#f4f4f4] rounded-3xl text-black min-h-screen transition-transform duration-100 transform overflow-y-auto ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:block  z-50`}
       >
         {/* Top Section */}
         <div className="flex flex-col flex-grow">
