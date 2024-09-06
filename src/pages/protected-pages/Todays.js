@@ -88,12 +88,12 @@ function Todays() {
   };
 
   return (
-    <div className='p-4 bg-[#f4f4f4] rounded-3xl text-black min-h-screen w-full flex flex-col'>
+    <div className='p-4 bg-[#fefefe] rounded-3xl text-black min-h-screen w-full flex flex-col'>
       <div>
         <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold m-5 lg:mx-10'>Today</h1>
         <form className='flex mx-3 md:mx-10' onSubmit={handleSubmit(onSubmit)}>
           <button disabled={isSubmitting} className='border-l-2 border-y-2 border-gray-200 py-1 px-2 bg-white rounded-l-xl cursor-pointer' type='submit'>
-            <FaPlus />
+          <div className="border rounded-full p-1 border-gray-400"><FaPlus className="text-sm"/></div>
           </button>
           <input
             autoComplete='off'
