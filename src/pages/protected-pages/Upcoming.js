@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, forwardRef } from "react";
 import { useForm } from "react-hook-form";
-import { FaPlus } from "react-icons/fa6";
+import { FaCalendarCheck, FaClock, FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
 import {
@@ -24,6 +24,8 @@ import {
 } from "../../store/slices/weekSlice";
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.module.css'
 
 const todayTaskSchema = z.object({
   todayTask: z.string().max(500, "Word limit").min(1, "*"),
@@ -62,6 +64,33 @@ function Upcoming() {
 
   const [contextMenu, setContextMenu] = useState(null);
   const contextMenuRef = useRef(null);
+  const [err, setErr] = useState('')
+  const [errWeek, setErrWeek] = useState('')
+  const [errTmr, setErrTmr] = useState('')
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const CustomInput = forwardRef(({ value, onClick }, ref) => (
+    <div
+      onClick={onClick}
+      ref={ref}
+      className='flex items-center cursor-pointer py-1 px-2 border-r-2 border-y-2 border-gray-200 rounded-r-xl  bg-white'
+    >
+      <FaClock title="Select Time" className='text-xl text-gray-600 ' />
+      <span style={{ marginLeft: '10px' }}>{value || "When"}</span>
+    </div>
+  ));
+
+  const CustomInputW = forwardRef(({ value, onClick }, ref) => (
+    <div
+      onClick={onClick}
+      ref={ref}
+      className='flex items-center cursor-pointer, py-1 px-2 border-r-2 border-y-2 border-gray-200 rounded-r-xl bg-white'
+    >
+      <FaCalendarCheck title="Select Time" className='text-xl text-gray-600' />
+      <span className='ml-3'>{value || "when"}</span>
+    </div>
+  ));
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -81,43 +110,66 @@ function Upcoming() {
 
   async function onSubmit(data) {
     try {
-      const newTask = {
-        id: `${Date.now()}`,
-        content: data.todayTask,
-        checked: false,
-      };
-      dispatch(setTasks(newTask));
-      resetToday();
+      if (!selectedTime) {
+        throw new Error('Please select a starting time.');
+      }
+      else {
+        const newTask = {
+          id: `${Date.now()}`,
+          content: data.todayTask,
+          checked: false,
+          due_date: selectedTime.toTimeString()
+        };
+        dispatch(setTasks(newTask));
+        resetToday();
+        setSelectedTime()
+        setErr('')
+      }
+
     } catch (error) {
-      console.log(error);
+      setErr(error.message)
     }
   }
 
   async function onSubmitTomorrow(data) {
+
     try {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
       const newTask = {
         id: `${Date.now()}`,
         content: data.tomorrowTask,
         checked: false,
+        due_date: tomorrow.toDateString(),
       };
       dispatch(setTomorrowTasks(newTask));
+      dispatch(setWeekTasks(newTask));
       resetTomorrow();
+      setErr('')
     } catch (error) {
-      console.log(error);
+      setErrTmr(error.message)
     }
   }
 
   async function onSubmitWeek(data) {
     try {
-      const newTask = {
-        id: `${Date.now()}`,
-        content: data.weekTask,
-        checked: false,
-      };
-      dispatch(setWeekTasks(newTask));
-      resetWeek();
+      if (!selectedDate) {
+        throw new Error('Please select a date.');
+      } else {
+        const newTask = {
+          id: `${Date.now()}`,
+          content: data.weekTask,
+          checked: false,
+          due_date: selectedDate.toDateString()
+        };
+        dispatch(setWeekTasks(newTask));
+        resetWeek();
+        setSelectedDate()
+        setErrWeek('')
+      }
     } catch (error) {
-      console.log(error);
+      setErrWeek(error.message)
     }
   }
 
@@ -196,8 +248,8 @@ function Upcoming() {
   return (
     <div className="bg-[#fefefe] rounded-3xl text-black min-h-screen w-full flex flex-col gap-3 mt-3">
       <h1 className="text-lg md:text-2xl lg:text-3xl font-semibold m-2 lg:m-4">
-          Upcoming
-        </h1>
+        Upcoming
+      </h1>
       {/* Today's Tasks */}
       <div className="border border-gray-400 rounded-2xl pb-2 px-2 min-h-60 md:mb-10">
         <h1 className="text-base md:text-lg lg:text-2xl font-semibold m-5 lg:mx-10">
@@ -216,11 +268,21 @@ function Upcoming() {
           </button>
           <input
             autoComplete="off"
-            className="w-full max-w-[700px] border-r-2 border-y-2 border-gray-200 py-1 px-2 rounded-r-xl focus:outline-none"
+            className="w-full max-w-[700px] border-y-2 border-gray-200 py-1 px-2 focus:outline-none"
             {...registerToday("todayTask")}
             type="text"
             placeholder="Add new task"
             disabled={isSubmittingToday}
+          />
+          <DatePicker
+            selected={selectedTime}
+            onChange={(time) => setSelectedTime(time)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={30}
+            timeFormat="HH:mm"
+            dateFormat="HH:mm"
+            customInput={<CustomInput />}
           />
         </form>
         {todayErrors.todayTask && (
@@ -228,6 +290,7 @@ function Upcoming() {
             {todayErrors.todayTask.message}
           </p>
         )}
+        {err && <p className="text-red-500 mx-10 mt-1">{err}</p>}
 
         <DragDropContext onDragEnd={(result) => onDragEnd(result, "today")}>
           <Droppable droppableId="todayDroppable">
@@ -316,6 +379,7 @@ function Upcoming() {
               {tomorrowErrors.tomorrowTask.message}
             </p>
           )}
+          {errTmr && <p className="text-red-500 mx-10 mt-1">{errTmr}</p>}
 
           <DragDropContext
             onDragEnd={(result) => onDragEnd(result, "tomorrow")}
@@ -391,11 +455,19 @@ function Upcoming() {
             </button>
             <input
               autoComplete="off"
-              className="w-full max-w-[700px] border-r-2 border-y-2 border-gray-200 py-1 px-2 rounded-r-xl focus:outline-none"
+              className="w-full max-w-[700px] border-y-2 border-gray-200 py-1 px-2 focus:outline-none"
               {...registerWeek("weekTask")}
               type="text"
               placeholder="Add new task"
               disabled={isSubmittingWeek}
+            />
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              minDate={new Date()}
+              maxDate={new Date(new Date().setDate(new Date().getDate() + 7))}
+              dateFormat="EEEE"
+              customInput={<CustomInputW />}
             />
           </form>
           {weekErrors.weekTask && (
@@ -403,6 +475,7 @@ function Upcoming() {
               {weekErrors.weekTask.message}
             </p>
           )}
+          {errWeek && <p className="text-red-500 mx-10 mt-1">{errWeek}</p>}
 
           <DragDropContext onDragEnd={(result) => onDragEnd(result, "week")}>
             <Droppable droppableId="weekDroppable">

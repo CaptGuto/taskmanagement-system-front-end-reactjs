@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useRef, useState, forwardRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaClock, FaPlus } from 'react-icons/fa6';
+import { FaCalendarCheck, FaPlus } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
-import { removeTasks, setTasks, setTasksForDnd, toggleFinished } from '../../store/slices/todayTasks';
+import { removeAnyTasks, setAnyTasks, setAnyTasksForDnd, toggleAnyFinished } from '../../store/slices/tasksSlice';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DatePicker from 'react-datepicker';
@@ -15,9 +15,9 @@ const taskSchema = z.object({
   task: z.string().max(500, "Word limit").min(1, '*')
 });
 
-function Todays() {
+function TasksPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({ resolver: zodResolver(taskSchema) });
-  const tasks = useSelector((state) => state.task.value);
+  const tasks = useSelector((state) => state.anytask.value);
   const dispatch = useDispatch();
   const [contextMenu, setContextMenu] = useState(null);
   const contextMenuRef = useRef(null);
@@ -30,8 +30,8 @@ function Todays() {
       ref={ref}
       className='flex inline-flex, items-center, cursor-pointer, py-1 px-2 border-r-2 border-y-2 border-gray-200 rounded-r-xl  bg-white'
     >
-      <FaClock title="Select Time" className='text-2xl text-gray-600 ' />
-      <span style={{ marginLeft: '10px' }}>{value || "When"}</span>
+      <FaCalendarCheck title="Select Time" className='text-2xl text-gray-600' />
+      <span className='ml-3'>{value || "when"}</span>
     </div>
   ));
 
@@ -53,15 +53,14 @@ function Todays() {
     try {
       //console.log(data);
       if (!selectedDate) {
-        throw new Error('Please select a date.');
+        throw new Error('Please select a due date.');
       }
       else {
-        const newTask = { id: `${Date.now()}`, content: data.task, due_date: selectedDate.toTimeString(), checked: false };
-        dispatch(setTasks(newTask));
+        const newTask = { id: `${Date.now()}`, content: data.task, due_date: selectedDate.toDateString(), checked: false };
+        dispatch(setAnyTasks(newTask));
         reset();
-        setErr('')
         setSelectedDate()
-        
+        setErr('')
         //send a post request here too or implement useEffect function that triggers every time when the task is updated in any way
       }
     }
@@ -82,7 +81,7 @@ function Todays() {
     const [movedTask] = updatedTasks.splice(source.index, 1);
     updatedTasks.splice(destination.index, 0, { ...movedTask, id: draggableId });
 
-    dispatch(setTasksForDnd(updatedTasks));
+    dispatch(setAnyTasksForDnd(updatedTasks));
     //send a post to the server here also
   };
 
@@ -102,21 +101,21 @@ function Todays() {
   const handleDelete = () => {
     if (contextMenu && contextMenu.taskIndex !== undefined) {
       const taskId = tasks[contextMenu.taskIndex].id;
-      dispatch(removeTasks(taskId));
+      dispatch(removeAnyTasks(taskId));
     }
     handleClose();
     // send a post request here too
   };
 
   const handleChecked = (index) => {
-    dispatch(toggleFinished(tasks[index].id));
+    dispatch(toggleAnyFinished(tasks[index].id));
     // here too
   };
 
   return (
-    <div className='p-4 bg-[#fefefe] rounded-2xl border border-gray-200 text-black min-h-screen w-full flex flex-col'>
+    <div className='p-4 bg-[#fefefe] rounded-3xl text-black min-h-screen w-full flex flex-col'>
       <div>
-        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold m-5 lg:mx-10'>Today</h1>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold m-3 lg:mx-5'>Tasks</h1>
         <form className='flex mx-3 md:mx-10' onSubmit={handleSubmit(onSubmit)}>
           <button disabled={isSubmitting} className='border-l-2 border-y-2 border-gray-200 py-1 px-2 bg-white rounded-l-xl cursor-pointer' type='submit'>
             <div className="border rounded-full p-1 border-gray-400"><FaPlus className="text-sm" /></div>
@@ -132,12 +131,9 @@ function Todays() {
           />
           <DatePicker
             selected={selectedDate}
-            onChange={(time) => setSelectedDate(time)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={30}
-            timeFormat="HH:mm"
-            dateFormat="HH:mm"
+            onChange={(date) => setSelectedDate(date)}
+            minDate={new Date()}
+            dateFormat="MMMM d, yyyy"
             customInput={<CustomInput />}
           />
         </form>
@@ -192,4 +188,4 @@ function Todays() {
   );
 }
 
-export default Todays;
+export default TasksPage;
