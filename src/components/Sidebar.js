@@ -9,11 +9,15 @@ import { FaPerson, FaPlus } from "react-icons/fa6";
 import { FaTasks } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { PiSignOut } from "react-icons/pi";
+import { useSelector } from "react-redux";
 
 function Sidebar() {
   const [showModalPopup, setShowModalPopup] = useState(false);
   const [openParent3, setOpenParent3] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const tasks = useSelector((state) => state.task.value);
+  const weekTask = useSelector((state) => state.weektask.value);
+  const AnyTask = useSelector((state) => state.anytask.value);
 
   function handleToggleModalPopup() {
     setShowModalPopup(!showModalPopup);
@@ -62,7 +66,7 @@ function Sidebar() {
                 <div className="w-full px-2 py-1 text-left text-sm">
                   Upcoming
                 </div>
-                <span className="bg-white rounded-full px-1 text-xs">6</span>
+                <span className="bg-white rounded-full px-1 text-xs">{tasks.length + weekTask.length}</span>
               </NavLink>
 
               <NavLink
@@ -71,7 +75,7 @@ function Sidebar() {
               >
                 <IoTodayOutline className="text-sm" />
                 <div className="w-full px-2 py-1 text-left text-sm">Today</div>
-                <span className="bg-white rounded-full px-1 text-xs">6</span>
+                <span className="bg-white rounded-full px-1 text-xs">{tasks.length}</span>
               </NavLink>
 
               <NavLink
@@ -82,6 +86,16 @@ function Sidebar() {
                 <div className="w-full px-2 py-1 text-left text-sm">
                   Calendar
                 </div>
+              </NavLink>
+              <NavLink
+                to={"/task"}
+                className="flex items-center hover:bg-gray-300 rounded-md px-1"
+              >
+                <FaTasks className="text-sm" />
+                <div className="w-full px-2 py-1 text-left text-sm">
+                  Planned
+                </div>
+                <span className="bg-white rounded-full px-1 text-xs">{AnyTask.length}</span>
               </NavLink>
             </div>
           </div>
