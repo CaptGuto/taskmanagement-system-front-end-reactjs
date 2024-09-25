@@ -5,6 +5,7 @@ import weekreducer from './slices/weekSlice'
 import tomorrowReducer from './slices/tomorrowSlice'
 import anyTaskReducer from './slices/tasksSlice'
 import assignedTaskReducer from './slices/assignedSlice'
+import projectReducer from './slices/projectSlice'
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     task: taskReducer,
     weektask: weekreducer,
     tomorrowtask: tomorrowReducer,
-    assignedTask: assignedTaskReducer
+    assignedTask: assignedTaskReducer,
+    project: projectReducer
   },
 });
