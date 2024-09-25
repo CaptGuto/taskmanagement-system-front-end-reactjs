@@ -33,7 +33,7 @@ function Assigned() {
       <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold m-1 lg:mx-10'>
         Projects
       </h1>
-      <div className='p-4 bg-[#fefefe] rounded-2xl border border-gray-200 text-black min-h-60 lg:min-h-80 w-full flex flex-col justify-between mx-3'>
+      <div className='p-4 bg-[#fefefe] rounded-2xl border border-gray-200 text-black h-[50dvh] min-h-60 lg:min-h-80 w-full flex flex-col justify-between mx-3'>
         <div>
           <div className='flex justify-between items-center m-3 lg:mx-7'>
             <h2 className='text-lg md:text-xl lg:text-2xl font-semibold'>
